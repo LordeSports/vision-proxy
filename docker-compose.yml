@@ -1,0 +1,21 @@
+services:
+  vision-proxy:
+    build: .
+    container_name: vision-proxy
+    ports:
+      - "8000:8000"
+    environment:
+      # OCR Service Configuration
+      - OCR_ENDPOINT=${OCR_ENDPOINT:-http://host.docker.internal:8080/v1/chat/completions}
+      - OCR_API_KEY=${OCR_API_KEY:-}
+      - OCR_MODEL_NAME=${OCR_MODEL_NAME:-gpt-4-vision}
+      # OCR Processing Options
+      - OCR_PARALLEL=${OCR_PARALLEL:-true}
+      - OCR_PROMPT=${OCR_PROMPT:-请详细描述这张图片的内容}
+      # Timeout Settings
+      - OCR_TIMEOUT=${OCR_TIMEOUT:-60}
+      - UPSTREAM_TIMEOUT=${UPSTREAM_TIMEOUT:-300}
+    restart: unless-stopped
+    # For accessing host network services (Linux)
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
